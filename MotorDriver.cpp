@@ -36,14 +36,14 @@ void MotorDriver::apply(void)
   }
 }
 
-void MotorDriver::printState(void) {
+String MotorDriver::printState(void) {
   String printString =
     "Motors: M1: " + String(pwmDir[LEFT_MOTOR_INDEX]*pwmValues[LEFT_MOTOR_INDEX])
     + " M2: " + String(pwmDir[RIGHT_MOTOR_INDEX]*pwmValues[RIGHT_MOTOR_INDEX])
     + " M3: " + String(pwmDir[X_MOTOR_INDEX]*pwmValues[X_MOTOR_INDEX])
     + " M4: " + String(pwmDir[VERT_MOTOR_INDEX]*pwmValues[VERT_MOTOR_INDEX]);
 
-  printer.printValue(4,printString);
+  return printString; //printer.printValue(4,printString);
 }
 
 size_t MotorDriver::writeDataBytes(unsigned char * buffer, size_t idx) {

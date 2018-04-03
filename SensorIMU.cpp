@@ -63,7 +63,7 @@ void SensorIMU::read(void) {
   acceleration.z = accel_event.acceleration.z;
 }
 
-void SensorIMU::printState(void) {
+String SensorIMU::printRollPitchHeading(void) {
   String printString = "IMU:"; 
   printString += " roll: ";
   printString += String(state.roll);
@@ -71,16 +71,18 @@ void SensorIMU::printState(void) {
   printString += String(state.pitch); 
   printString += " heading: ";
   printString += String(state.heading);
-  printer.printValue(5, printString);
-  
-  printString = "IMU:";
+  return printString; //printer.printValue(5, printString);
+}
+
+String SensorIMU::printAccels(void) {
+  String printString = "IMU:";
   printString += " accel X: ";
   printString += String(acceleration.x);
   printString += " accel Y: ";
   printString += String(acceleration.y);
   printString += " accel Z: ";
   printString += String(acceleration.z);
-  printer.printValue(6, printString);
+  return printString; //printer.printValue(6, printString);
 }
 
 size_t SensorIMU::writeDataBytes(unsigned char * buffer, size_t idx) {
@@ -92,16 +94,4 @@ size_t SensorIMU::writeDataBytes(unsigned char * buffer, size_t idx) {
   data_slot[4] = acceleration.y;
   data_slot[5] = acceleration.z;
   return idx + 6*sizeof(float);
-}
-
-bool SensorIMU::loopTime(int loopStartTime) {
-  int currentTime = millis();
-  if (lastLoopTime == -1) {
-    lastLoopTime = loopStartTime-IMU_LOOP_INTERVAL+IMU_LOOP_OFFSET;
-  }
-  if (currentTime - lastLoopTime >= IMU_LOOP_INTERVAL) {
-    lastLoopTime = currentTime;
-    return true;
-  }
-  return false;
 }

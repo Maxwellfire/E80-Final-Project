@@ -14,6 +14,10 @@ void Logger::include(DataSource * source_p) {
 	++num_datasources;
 }
 
+// void Logger::includeInt(int * target)
+// void Logger::includeBool(bool * target)
+// void Logger::includeFloat(float * target)
+
 void Logger::padding(int number, byte width, String & str) {
 	int currentMax = 10;
 	for (byte i = 1; i < width; i++) {
@@ -79,6 +83,9 @@ void Logger::init(void) {
 	} else {
 		file.close();
 	}
+
+	// if exiting without error
+	keepLogging = true;
 }
 
 bool Logger::log(void){
@@ -95,7 +102,7 @@ bool Logger::log(void){
 	// write data to SD
 	if (writtenBlocks >= FILE_BLOCK_COUNT) {
 		printer.printMessage("Current file size limit reached. Change FILE_BLOCK_COUNT to fix. Stopping logging for now.",0);
-		return false;
+		keepLogging = false;
 	}
 
 	file = SD.open(logfilename, FILE_WRITE);
@@ -108,21 +115,16 @@ bool Logger::log(void){
 	file.close();
 
 	writtenBlocks++;
-	printer.printValue(2,"Logger: Just logged buffer " + String(writtenBlocks) + " to SD.");
-	return true;
+	keepLogging = true;
 }
 
+String Logger::printState(void){
+	String printString = "Logger: ";
+	if(keepLogging) {
+		printString += "Just logged buffer " + String(writtenBlocks) + " to SD.";
+	} else {
+		printString += "LOGGING ERROR, LOGGING HAS STOPPED";
+	}
 
-
-
-bool Logger::loopTime(int loopStartTime) {
-  int currentTime = millis();
-  if (lastLoopTime == -1) {
-    lastLoopTime = loopStartTime-LOG_LOOP_INTERVAL+LOG_LOOP_OFFSET;
-  }
-  if (currentTime - lastLoopTime >= LOG_LOOP_INTERVAL) {
-    lastLoopTime = currentTime;
-    return true;
-  }
-  return false;
+	return printString;
 }

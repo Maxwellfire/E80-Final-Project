@@ -30,15 +30,3 @@ void LED::flashLED(void) {
   LED_State = !LED_State;
 }
 
-// tells the main loop when to activate
-bool LED::loopTime(int loopStartTime) {
-  int currentTime = millis();
-  if (lastLoopTime == -1) {
-    lastLoopTime = loopStartTime-LED_LOOP_INTERVAL+LED_LOOP_OFFSET;
-  }
-  if (currentTime - lastLoopTime >= LED_LOOP_INTERVAL) {
-    lastLoopTime = currentTime;
-    return true;
-  }
-  return false;
-}

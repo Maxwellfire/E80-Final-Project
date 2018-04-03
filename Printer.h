@@ -6,9 +6,6 @@
 
 #define LONGEST_STRING 60 // characters
 
-#define PRINT_LOOP_INTERVAL 100 // ms
-#define PRINT_LOOP_OFFSET 0 // ms
-
 /*
  * Print controls the serial printing for all funtions in Default_Robot, so that
  * it doesn't become overwhelming
@@ -28,7 +25,7 @@ public:
   // actually displays the held information
   void printToSerial(void);
 
-  bool loopTime(int loopStartTime);
+  int lastExecutionTime = -1;
 
 private:
   // highest allowed row number (for both errors and values)
@@ -42,8 +39,6 @@ private:
 
   // stores number of displays left for each message
   int messageTimes[maxRow];
-
-  int lastPrintTime = -1;
 };
 
 #endif

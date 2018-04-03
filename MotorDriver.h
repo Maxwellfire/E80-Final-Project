@@ -32,8 +32,8 @@ public:
   // applies the stored values to the pins
   void apply(void);
 
-  // prints current output to Serial port
-  void printState(void);
+  // prints current output as string
+  String printState(void);
 
   // simple motor directions (great for replacing or adding to pcontrol)
   void stopDriving(void);

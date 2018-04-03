@@ -3,14 +3,11 @@
 
 #include <Arduino.h>
 
-#include "SensorGPS.h"
-#include "SensorIMU.h"
+#include <SensorGPS.h>
+#include <SensorIMU.h>
 #include "DataSource.h"
 #include "Pinouts.h"
 
-
-#define SE_LOOP_INTERVAL 100 // ms
-#define SE_LOOP_OFFSET 40 // ms
 
 typedef struct {
   float x = 0; // x position in global frame
@@ -36,14 +33,14 @@ public:
   // State Access
   state_t state;
   void updateState(sensors_vec_t * imu_state_p, gps_state_t * gps_state_p);
-  void printState(void);
+  String printState(void);
 
   void latlonToXY(double lat, double lon, float* x_p, float* y_p);
 
   // from DataSource
   size_t writeDataBytes(unsigned char * buffer, size_t idx);
 
-  bool loopTime(int loopStartTime);
+  int lastExecutionTime = -1;
 
 private:
   double loop_period;
@@ -52,7 +49,6 @@ private:
   float cosOrigLat;
 
 
-  int lastLoopTime = -1;
 };
 
 #endif

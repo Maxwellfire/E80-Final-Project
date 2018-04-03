@@ -13,9 +13,6 @@
 #define BUFFER_BLOCK_COUNT 5
 #define MAX_NUM_DATASOURCES 10
 
-#define LOG_LOOP_INTERVAL 100 // ms
-#define LOG_LOOP_OFFSET 55 // ms
-
 #include <Arduino.h>
 #include <SPI.h>
 #include <SD.h>
@@ -26,16 +23,18 @@ class Logger {
 public:
 	Logger(void);
 
-  // include all dataSources before running init
+    // include all dataSources before running init
 	void include(DataSource * source_p);
 
-  // run after all dataSources have been registered
+    // run after all dataSources have been registered
 	void init(void);
 
 	// records all data at the time it's called to the SD
 	bool log(void);
 
-	bool loopTime(int loopStartTime);
+	String printState(void);
+	int lastExecutionTime = -1;
+	bool keepLogging = false;
 
 private:
 	void padding(int number, byte width, String & str);
@@ -47,7 +46,5 @@ private:
 	File file;
 
 	uint32_t writtenBlocks = 0;
-
-	int lastLoopTime = -1;
 };
 #endif

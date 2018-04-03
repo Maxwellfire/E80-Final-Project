@@ -3,9 +3,6 @@
 
 #define GPS_READ_INTERVAL 3
 
-#define GPS_LOOP_INTERVAL 100 // ms
-#define GPS_LOOP_OFFSET 20 // ms
-
 #define RADIUS_OF_EARTH_M 6371000
 
 #include <Arduino.h>
@@ -37,12 +34,12 @@ public:
 
   // Latest reported data is stored here
   gps_state_t state;
-  void printState(void);
+  String printState(void);
 
   // from DataSource
   size_t writeDataBytes(unsigned char * buffer, size_t idx);
 
-  bool loopTime(int loopStartTime);
+  int lastExecutionTime = -1;
 
 private:
   //TinyGPS gps;
@@ -55,7 +52,7 @@ private:
 
   float convertDegMinToDecDeg (float degMin);
 
-  int lastLoopTime = -1;
+  
 };
 
 #endif

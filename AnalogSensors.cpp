@@ -1,7 +1,7 @@
 #include "AnalogSensors.h"
 
 AnalogSensors::AnalogSensors()
-	:DataSource("ADC1_Count,ADC2_Count,ADC3_Count ", "int,int,int")
+	:DataSource("ADC1_Count,ADC2_Count,ADC3_Count,ADC4_Count ", "int,int,int,int")
 {
 
 }
@@ -13,9 +13,10 @@ AnalogSensors::~AnalogSensors()
 
 void AnalogSensors::init()
 {
-	pinMode(A2, INPUT); //A2
-	pinMode(A3, INPUT);  //A3
-	pinMode(0, INPUT); //
+	pinMode(A2, INPUT);	//A2
+	pinMode(A3, INPUT);	//A3
+	pinMode(0, INPUT);	//
+	pinMode(0, INPUT);	//
 
 }
 
@@ -36,16 +37,17 @@ size_t AnalogSensors::writeDataBytes(unsigned char * buffer, size_t idx)
 {
 	uint16_t * int_slot = (uint16_t *)(buffer + idx);
 	int_slot[0] = sensorReading1;
-	int_slot[0] = sensorReading2;
-	int_slot[0] = sensorReading3;
+	int_slot[1] = sensorReading2;
+	int_slot[2] = sensorReading3;
+	int_slot[3] = sensorReading4;
 	idx += 1 * sizeof(int);
 	return idx;
 }
 
 void AnalogSensors::read()
 {
-	sensorReading1 = analogRead(10);
+	sensorReading1 = analogRead(10); //
 	sensorReading2 = analogRead(11);
 	sensorReading3 = analogRead(12);
-
+	sensorReading4 = analogRead(12);
 }

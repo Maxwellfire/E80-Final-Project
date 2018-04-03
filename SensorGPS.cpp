@@ -4,7 +4,7 @@ extern Printer printer;
 #include <Adafruit_GPS.h>
   
 SensorGPS::SensorGPS(void) 
-: DataSource("lat,lon,hdop,nsats","float,float,uint16,uint8") {
+: DataSource("lat,lon,hdop,nsats","int32,int32,uint16,uint8") {
 
   //HardwareSerial Uart = HardwareSerial();
 
@@ -83,11 +83,12 @@ void SensorGPS::updateState(Adafruit_GPS* GPS)
 {
   //gps.f_get_position(&state.lat, &state.lon, &state.age);
   //state.hdop = gps.hdop();
-  state.lat = convertDegMinToDecDeg (GPS->latitude);
-  state.lon = convertDegMinToDecDeg (GPS->longitude);
+  state.lat = GPS->latitudeDegrees;
+  state.lon = GPS->longitudeDegrees;
   //state.age = GPS->age
   state.num_sat =GPS->satellites;
 }
+
 
 float SensorGPS::convertDegMinToDecDeg (float degMin){
   float min = 0.0;
@@ -100,18 +101,18 @@ float SensorGPS::convertDegMinToDecDeg (float degMin){
 	
 }
 
-void SensorGPS::printState(void)
+String SensorGPS::printState(void)
 {
   String printString = "GPS: Lat: ";
-  printString += String(state.lat,6);
+  printString += String(state.lat,7);
   printString += " Lon: ";
-  printString += String(state.lon,6);
+  printString += String(state.lon,7);
   printString += " HDOP: ";
   printString += String(state.hdop);
   printString += " N sats: ";
   printString += String(state.num_sat);
 
-  printer.printValue(0, printString);
+  return printString; //printer.printValue(0, printString);
 }
 
 size_t SensorGPS::writeDataBytes(unsigned char * buffer, size_t idx)
@@ -129,16 +130,4 @@ size_t SensorGPS::writeDataBytes(unsigned char * buffer, size_t idx)
   uint8_slot[0] = state.num_sat;
   idx += sizeof(uint8_t);
   return idx;
-}
-
-bool SensorGPS::loopTime(int loopStartTime) {
-  int currentTime = millis();
-  if (lastLoopTime == -1) {
-    lastLoopTime = loopStartTime-GPS_LOOP_INTERVAL+GPS_LOOP_OFFSET;
-  }
-  if (currentTime - lastLoopTime >= GPS_LOOP_INTERVAL) {
-    lastLoopTime = currentTime;
-    return true;
-  }
-  return false;
 }

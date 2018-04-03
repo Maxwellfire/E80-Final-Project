@@ -3,28 +3,32 @@
 #include "Printer.h"
 extern Printer printer;
 
-ADCSampler::ADCSampler(void)
-  : DataSource("A00,A01,A07,A09,A10,A11,A12",
-               "int,int,int,int,int,int,int")
+ADCSampler::ADCSampler(void) 
+  : DataSource("A00,A01,A02,A03,A10,A11,A12,A13,A14,A15,A16,A17,A18,A19",
+               "int,int,int,int,int,int,int,int,int,int,int,int,int,int") // from DataSource
 {}
 
 
 void ADCSampler::updateSample(void)
 {
-  const int pinmap[NUM_PINS] = {14,15,21,23,24,25,26}; // see pin map in ADCSampler.h
+  // maps pins to variable names
+  // A10-A13 are pins 34-37, A14 is pin 40, rest same as pinout picture
+  // pins A12-A13 and A15-A20 are on surface mount pads underneath the Teensy
+  // pins A10-A14 are _NOT_ 5V tolerarant!  Everyone else is.  (2x check)
+  const int pinmap[NUM_PINS] =  {14,15,16,17,34,35,36,37,40,26,27,28,29,30}; 
   for (int i=0; i<NUM_PINS; i++){
     sample[i] = analogRead(pinmap[i]);
   }
 }
 
-void ADCSampler::printSample(void)
+String ADCSampler::printSample(void)
 {
   String printString = "ADC:";
   for (int i=0; i<NUM_PINS; i++) {
     printString += " ";
     printString += String(sample[i]);
   }
-  printer.printValue(0, printString);
+  return printString; //printer.printValue(0, printString);
 }
 
 size_t ADCSampler::writeDataBytes(unsigned char * buffer, size_t idx)
@@ -34,16 +38,4 @@ size_t ADCSampler::writeDataBytes(unsigned char * buffer, size_t idx)
     data_slot[i] = sample[i];
   }
   return idx + NUM_PINS*sizeof(int);
-}
-
-bool ADCSampler::loopTime(int loopStartTime) {
-  int currentTime = millis();
-  if (lastLoopTime == -1) {
-    lastLoopTime = loopStartTime-ADC_LOOP_INTERVAL+ADC_LOOP_OFFSET;
-  }
-  if (currentTime - lastLoopTime >= ADC_LOOP_INTERVAL) {
-    lastLoopTime = currentTime;
-    return true;
-  }
-  return false;
 }

@@ -9,8 +9,7 @@
 #include "Pinouts.h"
 
 // controls how often and when in the loop this class's functions run
-#define LED_LOOP_INTERVAL 500 // ms
-#define LED_LOOP_OFFSET 50 // ms
+
 
 class LED {
 public: // for functions outside code might call
@@ -20,12 +19,11 @@ public: // for functions outside code might call
 
   void flashLED(void);
 
-  bool loopTime(int loopStartTime);
+  int lastExecutionTime = -1;
 
 private: // for helper functions and hidden variables
   bool LED_State = false;
-
-  int lastLoopTime = -1;
+  
 };
 
 #endif

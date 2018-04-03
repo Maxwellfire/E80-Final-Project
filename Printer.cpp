@@ -7,9 +7,8 @@ Printer::Printer(void) {
 void Printer::init(void) {
   // initializes the serial port
   Serial.begin(115200);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
+  delay(3000);          // timeout during which serial port probably connects.  Allows disconnected startup.
+  //while (!Serial) {;} // wait for serial port to connect. Needed for native USB port only
   Serial.println("Serial connection started");
 
   for (int i = 0; i < maxRow; i++) {
@@ -109,16 +108,4 @@ void Printer::printToSerial(void) {
     Serial.println(printInfo[row]);
   }
   Serial.flush();
-}
-
-bool Printer::loopTime(int loopStartTime) {
-  int currentTime = millis();
-  if (lastPrintTime == -1) {
-    lastPrintTime = loopStartTime-PRINT_LOOP_INTERVAL+PRINT_LOOP_OFFSET;
-  }
-  if (currentTime - lastPrintTime >= PRINT_LOOP_INTERVAL) {
-    lastPrintTime = currentTime;
-    return true;
-  }
-  return false;
 }

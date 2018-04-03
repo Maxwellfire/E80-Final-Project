@@ -27,4 +27,6 @@ private:
 	int sensorReading1;
 	int sensorReading2;
 	int sensorReading3;
+	int sensorReading4;
+	int sensorReading4;
 };

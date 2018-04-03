@@ -10,9 +10,7 @@
 #include <Madgwick.h>
 #include "DataSource.h"
 #include "Pinouts.h"
-
-#define IMU_LOOP_INTERVAL 100 // ms
-#define IMU_LOOP_OFFSET 10 // ms
+#include "TimingOffsets.h"
 
 class SensorIMU : public DataSource {
 public:
@@ -29,12 +27,13 @@ public:
   sensors_vec_t acceleration;
 
   // prints state to serial
-  void printState(void);
+  String printRollPitchHeading(void);
+  String printAccels(void);
 
   // from DataSource
   size_t writeDataBytes(unsigned char * buffer, size_t idx);
 
-  bool loopTime(int loopStartTime);
+  int lastExecutionTime = -1;
 
 private:
   // Create sensor instances.
@@ -58,7 +57,6 @@ private:
   // (Madgwick can be used for fast rotation)
   Mahony filter;
 
-  int lastLoopTime = -1;
 };
 
 #endif

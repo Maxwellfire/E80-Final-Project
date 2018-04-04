@@ -1,6 +1,8 @@
 #ifndef __PCONTROL_H__
 #define __PCONTROL_H__
 
+#include "StateEstimator.h"
+
 #define SUCCESS_RADIUS 2.0 // success radius in meters
 
 class PControl {

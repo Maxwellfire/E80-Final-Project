@@ -5,23 +5,30 @@ Previous Contributors:  Josephine Wong (jowong@hmc.edu) '18 (contributed in 2016
                         Apoorva Sharma (asharma@hmc.edu) '17 (contributed in 2016)
 */
 
+//ERRORS
+//Problems with pointer to waypoints not being copied
+//Logger::log declared as returning bool, but doesn't
+
 #include <Arduino.h>
 #include <Wire.h>
-#include <Pinouts.h>
-#include <TimingOffsets.h>
+#include <Adafruit_GPS.h>
 
+#include "TimingOffsets.h"
+#include "Pinouts.h"
 #include "SensorGPS.h"
 #include "SensorIMU.h"
 #include "StateEstimator.h"
-#include "Adafruit_GPS.h"
 #include "ADCSampler.h"
 #include "MotorDriver.h"
 #include "Logger.h"
 #include "Printer.h"
 #include "PControl.h"
+#include "SensorAnalog.h"
+#include "SensorDigital.h"
+#include "SensorEncoder.h"
 
 #define mySerial Serial1
-#include <LED.h>  // A template of a data soruce library
+#include "LED.h"  // A template of a data soruce library
 
 /////////////////////////* Global Variables *////////////////////////
 
@@ -32,6 +39,15 @@ SensorGPS gps;
 Adafruit_GPS GPS(&mySerial);  // FIX THIS
 ADCSampler adc;
 SensorIMU imu;
+
+SensorAnalog pressure("Pressure", 10);
+SensorAnalog temperature1("Temperature 1", 14);
+SensorAnalog temperature2("Temperature 2", 13);
+
+SensorDigital button1("Button 1", 12);
+
+SensorEncoder encoder("Encoder", 1, 2);
+
 Logger logger;
 Printer printer;
 LED led;
@@ -52,7 +68,13 @@ void setup() {
   logger.include(&gps);
   logger.include(&state_estimator);
   logger.include(&motor_driver);
-  logger.include(&adc);
+  logger.include(&pressure);
+  logger.include(&temperature1);
+  logger.include(&temperature2);
+  logger.include(&encoder);
+
+  //logger.include(&adc);
+
   logger.init();
 
   printer.init();
@@ -61,6 +83,19 @@ void setup() {
   gps.init(&GPS);
   motor_driver.init();
   led.init();
+  //adc.init();
+
+  pressure.init();
+  temperature1.init();
+  temperature2.init();
+  encoder.init();
+
+  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderRiseA, RISING);
+  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderFallA, FALLING);
+  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberB), &EncoderRiseB, RISING);
+
+
+  button1.init();
 
   const int number_of_waypoints = 2;
   const int waypoint_dimensions = 2;       // waypoints have two pieces of information, x then y.
@@ -69,9 +104,9 @@ void setup() {
   
   const float origin_lat = 34.106465;
   const float origin_lon = -117.712488;
-  state_estimator.init(origin_lat, origin_lon); 
+  state_estimator.init(origin_lat, origin_lon);
 
-  printer.printMessage("Starting main loop",10);
+  printer.printMessage("Starting main loop", 10);
   loopStartTime = millis();
   printer.lastExecutionTime         = loopStartTime - LOOP_PERIOD + PRINTER_LOOP_OFFSET ;
   imu.lastExecutionTime             = loopStartTime - LOOP_PERIOD + IMU_LOOP_OFFSET;
@@ -88,7 +123,11 @@ void loop() {
   
   if ( currentTime - printer.lastExecutionTime > LOOP_PERIOD ) {
     printer.lastExecutionTime = currentTime;
-    printer.printValue(0,adc.printSample());
+	printer.printValue(0, pressure.printSample() + " " 
+		+ temperature1.printSample() + " " 
+		+ temperature2.printSample() + " " 
+		+ button1.printSample() + " " 
+		+ encoder.printCount());
     printer.printValue(1,logger.printState());
     printer.printValue(2,gps.printState());   
     printer.printValue(3,state_estimator.printState());     
@@ -108,7 +147,10 @@ void loop() {
 
   if ( currentTime - adc.lastExecutionTime > LOOP_PERIOD ) {
     adc.lastExecutionTime = currentTime;
-    adc.updateSample(); 
+	pressure.updateSample();
+	temperature1.updateSample();
+	temperature2.updateSample();
+	button1.updateSample();
   }
 
   if ( currentTime - imu.lastExecutionTime > LOOP_PERIOD ) {
@@ -138,3 +180,17 @@ void loop() {
   }
 }
 
+void EncoderRiseA(void)
+{
+	encoder.riseA();
+}
+
+void EncoderFallA(void)
+{
+	encoder.fallA();
+}
+
+void EncoderRiseB(void)
+{
+	encoder.riseB();
+}

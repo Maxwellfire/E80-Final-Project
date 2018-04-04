@@ -14,6 +14,8 @@ class ADCSampler : public DataSource
 public:
   ADCSampler(void);
 
+  void init(void);
+
   // Managing state
   int sample [NUM_PINS];
   void updateSample(void);

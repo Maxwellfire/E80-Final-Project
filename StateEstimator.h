@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-#include <SensorGPS.h>
-#include <SensorIMU.h>
+#include "SensorGPS.h"
+#include "SensorIMU.h"
 #include "DataSource.h"
 #include "Pinouts.h"
 

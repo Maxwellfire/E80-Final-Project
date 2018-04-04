@@ -3,11 +3,6 @@
 
 #define SUCCESS_RADIUS 2.0 // success radius in meters
 
-#include <Arduino.h>
-#include "MotorDriver.h"
-#include "StateEstimator.h"
-extern MotorDriver motorDriver;
-
 class PControl {
 public:
   PControl(void);

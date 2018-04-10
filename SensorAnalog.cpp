@@ -5,7 +5,7 @@
 extern Printer printer;
 
 SensorAnalog::SensorAnalog(const char* name_in, int pinNumber_in)
-	:DataSource(name,"int") // from DataSource
+	:DataSource(name_in,"int") // from DataSource
 {
 	name = name_in;
 	pinNumber = pinNumber_in;

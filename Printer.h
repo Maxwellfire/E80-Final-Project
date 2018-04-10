@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "Pinouts.h"
 
-#define LONGEST_STRING 60 // characters
+#define LONGEST_STRING 100 // characters
 
 /*
  * Print controls the serial printing for all funtions in Default_Robot, so that

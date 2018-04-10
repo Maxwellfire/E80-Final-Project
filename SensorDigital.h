@@ -22,7 +22,8 @@ public:
 	int lastExecutionTime = -1;
 
 private:
-	int pinNumber;
 	const char* name;
+	int pinNumber;
+
 };
 #endif

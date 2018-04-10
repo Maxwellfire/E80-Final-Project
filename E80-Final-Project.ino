@@ -40,13 +40,13 @@ Adafruit_GPS GPS(&mySerial);  // FIX THIS
 ADCSampler adc;
 SensorIMU imu;
 
-SensorAnalog pressure("Pressure", 10);
-SensorAnalog temperature1("Temperature 1", 14);
-SensorAnalog temperature2("Temperature 2", 13);
+SensorAnalog pressure("Pressure", 15);
+SensorAnalog temperature1("Temperature_1", 17);
+SensorAnalog temperature2("Temperature_2", 26);
 
-SensorDigital button1("Button 1", 12);
+SensorDigital button1("Button_1", 7);
 
-SensorEncoder encoder("Encoder", 1, 2);
+//SensorEncoder encoder("Encoder", 1, 2);
 
 Logger logger;
 Printer printer;
@@ -71,7 +71,8 @@ void setup() {
   logger.include(&pressure);
   logger.include(&temperature1);
   logger.include(&temperature2);
-  logger.include(&encoder);
+  logger.include(&button1);
+  //logger.include(&encoder);
 
   //logger.include(&adc);
 
@@ -88,11 +89,12 @@ void setup() {
   pressure.init();
   temperature1.init();
   temperature2.init();
-  encoder.init();
+  button1.init();
+  //encoder.init();
 
-  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderRiseA, RISING);
-  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderFallA, FALLING);
-  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberB), &EncoderRiseB, RISING);
+  //attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderRiseA, RISING);
+  //attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderFallA, FALLING);
+  //attachInterrupt(digitalPinToInterrupt(encoder.pinNumberB), &EncoderRiseB, RISING);
 
 
   button1.init();
@@ -123,11 +125,11 @@ void loop() {
   
   if ( currentTime - printer.lastExecutionTime > LOOP_PERIOD ) {
     printer.lastExecutionTime = currentTime;
-	printer.printValue(0, pressure.printSample() + " " 
-		+ temperature1.printSample() + " " 
-		+ temperature2.printSample() + " " 
-		+ button1.printSample() + " " 
-		+ encoder.printCount());
+	printer.printValue(0, pressure.printSample() + " "
+		+ temperature1.printSample() + " "
+		+ temperature2.printSample() + " "
+		+ button1.printSample());// +" "
+		//+ encoder.printCount());
     printer.printValue(1,logger.printState());
     printer.printValue(2,gps.printState());   
     printer.printValue(3,state_estimator.printState());     
@@ -180,6 +182,7 @@ void loop() {
   }
 }
 
+/*
 void EncoderRiseA(void)
 {
 	encoder.riseA();
@@ -194,3 +197,4 @@ void EncoderRiseB(void)
 {
 	encoder.riseB();
 }
+*/

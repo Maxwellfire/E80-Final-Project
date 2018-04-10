@@ -5,7 +5,7 @@
 extern Printer printer;
 
 SensorEncoder::SensorEncoder(const char* name_in, int pinNumberA_in, int pinNumberB_in)
-	:DataSource(name, "int") // from DataSource
+	:DataSource(name_in, "int") // from DataSource
 {
 	name = name_in;
 

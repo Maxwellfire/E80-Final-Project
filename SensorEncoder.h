@@ -29,7 +29,7 @@ public:
 
 private:
 	const char* name;
-	
+
 	volatile bool AState = 0;
 
 };

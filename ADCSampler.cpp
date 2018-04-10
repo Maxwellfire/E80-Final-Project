@@ -4,7 +4,7 @@
 extern Printer printer;
 
 ADCSampler::ADCSampler(void) 
-  : DataSource("A00,Pressure,A02,Temp1,A10,A11,A12,A13,A14,A15,Temp2,OtherEncoder,A18,A19",
+  : DataSource("A00,A01,A02,A03,A10,A11,A12,A13,A14,A15,A16,A17,A18,A19",
                "int,int,int,int,int,int,int,int,int,int,int,int,int,int") // from DataSource
 {}
 

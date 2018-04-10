@@ -22,13 +22,17 @@ public:
   // Reads data from the sensor
   void read(void);
 
+  void getOrientation(float ax, float ay, float az, float mx, float my, float mz); // float gx, float gy, float gz, 
+
   // Latest reported orientation data is stored here
   sensors_vec_t state;
+  sensors_vec_t simple;  // simple state calculation
   sensors_vec_t acceleration;
 
   // prints state to serial
   String printRollPitchHeading(void);
   String printAccels(void);
+  String printSimple(void);
 
   // from DataSource
   size_t writeDataBytes(unsigned char * buffer, size_t idx);
@@ -56,6 +60,7 @@ private:
   // Mahony is lighter weight filter for slower systems
   // (Madgwick can be used for fast rotation)
   Mahony filter;
+
 
 };
 

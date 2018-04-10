@@ -89,6 +89,7 @@ void SensorGPS::updateState(Adafruit_GPS* GPS)
   state.num_sat =GPS->satellites;
 }
 
+//convertDegMinToDecDeg (
 
 float SensorGPS::convertDegMinToDecDeg (float degMin){
   float min = 0.0;

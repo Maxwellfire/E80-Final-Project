@@ -44,6 +44,9 @@ SensorAnalog pressure("Pressure", 15);
 SensorAnalog temperature1("Temperature_1", 17);
 //SensorAnalog temperature2("Temperature_2", 26);
 
+SensorAnalog batteryVoltage("Battery_Voltage", 29);
+SensorAnalog batteryCurrent("Battery_Current", 30);
+
 SensorDigital button1("Button_1", 7);
 
 SensorEncoder encoder("Encoder", 26, 27);
@@ -64,16 +67,17 @@ int current_way_point = 0;
 
 void setup() {
   
-  //logger.include(&imu);
-  //logger.include(&gps);
-  //logger.include(&state_estimator);
-  //logger.include(&motor_driver);
+  logger.include(&imu);
+  logger.include(&gps);
+  logger.include(&state_estimator);
+  logger.include(&motor_driver);
   logger.include(&pressure);
   logger.include(&temperature1);
   //logger.include(&temperature2);
   logger.include(&button1);
   logger.include(&encoder);
-
+  logger.include(&batteryVoltage);
+  logger.include(&batteryCurrent);
   //logger.include(&adc);
 
   logger.init();
@@ -91,6 +95,10 @@ void setup() {
   //temperature2.init();
   button1.init();
   encoder.init();
+
+  batteryVoltage.init();
+  batteryCurrent.init();
+
 
   attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderRiseA, RISING);
   attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderFallA, FALLING);
@@ -129,7 +137,7 @@ void loop() {
 	printer.printValue(0, pressure.printSample() + " "
 		+ temperature1.printSample() + " "
 		//+ temperature2.printSample() + " "
-		+ button1.printSample()// +" "
+		+ button1.printSample() + " "
 		+ encoder.printCount());
     printer.printValue(1,logger.printState());
     printer.printValue(2,gps.printState());   
@@ -157,6 +165,10 @@ void loop() {
 	temperature1.updateSample();
 	//temperature2.updateSample();
 	button1.updateSample();
+
+	batteryVoltage.updateSample();
+	batteryCurrent.updateSample();
+
   }
 
   if ( currentTime - imu.lastExecutionTime > LOOP_PERIOD ) {

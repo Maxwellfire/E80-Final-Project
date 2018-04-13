@@ -4,7 +4,7 @@ extern Printer printer;
 #include <Adafruit_GPS.h>
   
 SensorGPS::SensorGPS(void) 
-: DataSource("lat,lon,hdop,nsats","int32,int32,uint16,uint8") {
+: DataSource("lat,lon,hdop,nsats","float,float,uint16,uint8") {
 
   //HardwareSerial Uart = HardwareSerial();
 

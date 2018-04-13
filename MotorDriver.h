@@ -40,7 +40,6 @@ public:
   void driveDown(int power);
   void driveUp(int power);
   void driveAll(int power);
-  void driveAllBack(int power);
   void driveForward(int leftPower, int rightPower);
   void driveBack(int leftPower, int rightPower);
   void turnRight(int power);

@@ -116,6 +116,8 @@ bool Logger::log(void){
 
 	writtenBlocks++;
 	keepLogging = true;
+
+	return true;
 }
 
 String Logger::printState(void){

@@ -32,7 +32,7 @@ String SensorAnalog::printSample(void)
 
 size_t SensorAnalog::writeDataBytes(unsigned char * buffer, size_t idx)
 {
-	int * data_slot = (int *)&buffer[idx];
+	int* data_slot = (int*) &buffer[idx];
 	data_slot[0] = sample;
 	return idx +  1 * sizeof(int);
 }

@@ -22,23 +22,63 @@ void SensorEncoder::init(void)
 
 void SensorEncoder::riseA(void)
 {
-	AState = 1;
+	switch (state)
+	{
+	case 0:
+		state = 1;
+		encoderCount++;
+		break;
+	case 3:
+		state = 2;
+		break;
+	default:
+		break;
+	}
 }
 
 void SensorEncoder::fallA(void)
 {
-	AState = 0;
+	switch (state)
+	{
+	case 1:
+		state = 0;
+		encoderCount--;
+		break;
+	case 2:
+		state = 3;
+		break;
+	default:
+		break;
+	}
 }
 
 void SensorEncoder::riseB(void)
 {
-	if (AState == 1)
+	switch (state)
 	{
-		encoderCount++;
+	case 0:
+		state = 3;
+		break;
+	case 1:
+		state = 2;
+		break;
+	default:
+		break;
 	}
-	else
+}
+
+void SensorEncoder::fallB(void)
+{
+	switch (state)
 	{
-		encoderCount--;
+	case 2:
+		state = 1;
+		break;
+	case 3:
+		state = 0;
+		break;
+	default:
+		break;
 	}
 }
 

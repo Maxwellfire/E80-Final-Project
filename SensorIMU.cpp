@@ -57,7 +57,7 @@ void SensorIMU::read(void) {
   getOrientation(ax,ay,az,mx,my,mz);  // populate the this->simple field with simple orientation calcs
   state.roll = simple.roll; 
   state.pitch = simple.pitch; 
-  state.heading = simple.heading; 
+  state.heading = simple.heading * 57.2958F;
   
   /////////// Old orientation estiamtion code from v1 ///////////////
   // // Update the filter

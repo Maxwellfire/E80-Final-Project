@@ -42,11 +42,11 @@ SensorIMU imu;
 
 SensorAnalog pressure("Pressure", 15);
 SensorAnalog temperature1("Temperature_1", 17);
-SensorAnalog temperature2("Temperature_2", 26);
+//SensorAnalog temperature2("Temperature_2", 26);
 
 SensorDigital button1("Button_1", 7);
 
-//SensorEncoder encoder("Encoder", 1, 2);
+SensorEncoder encoder("Encoder", 26, 27);
 
 Logger logger;
 Printer printer;
@@ -64,15 +64,15 @@ int current_way_point = 0;
 
 void setup() {
   
-  logger.include(&imu);
-  logger.include(&gps);
-  logger.include(&state_estimator);
-  logger.include(&motor_driver);
+  //logger.include(&imu);
+  //logger.include(&gps);
+  //logger.include(&state_estimator);
+  //logger.include(&motor_driver);
   logger.include(&pressure);
   logger.include(&temperature1);
-  logger.include(&temperature2);
+  //logger.include(&temperature2);
   logger.include(&button1);
-  //logger.include(&encoder);
+  logger.include(&encoder);
 
   //logger.include(&adc);
 
@@ -88,13 +88,14 @@ void setup() {
 
   pressure.init();
   temperature1.init();
-  temperature2.init();
+  //temperature2.init();
   button1.init();
-  //encoder.init();
+  encoder.init();
 
-  //attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderRiseA, RISING);
-  //attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderFallA, FALLING);
-  //attachInterrupt(digitalPinToInterrupt(encoder.pinNumberB), &EncoderRiseB, RISING);
+  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderRiseA, RISING);
+  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderFallA, FALLING);
+  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberB), &EncoderRiseB, RISING);
+  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberB), &EncoderFallB, FALLING);
 
 
   button1.init();
@@ -127,9 +128,9 @@ void loop() {
     printer.lastExecutionTime = currentTime;
 	printer.printValue(0, pressure.printSample() + " "
 		+ temperature1.printSample() + " "
-		+ temperature2.printSample() + " "
-		+ button1.printSample());// +" "
-		//+ encoder.printCount());
+		//+ temperature2.printSample() + " "
+		+ button1.printSample()// +" "
+		+ encoder.printCount());
     printer.printValue(1,logger.printState());
     printer.printValue(2,gps.printState());   
     printer.printValue(3,state_estimator.printState());     
@@ -144,14 +145,17 @@ void loop() {
   if ( currentTime - pcontrol.lastExecutionTime > LOOP_PERIOD ) {
     pcontrol.lastExecutionTime = currentTime;
     pcontrol.calculateControl(&state_estimator.state);
-    motor_driver.driveForward(pcontrol.uL,pcontrol.uR);
+    
+	//motor_driver.driveForward(pcontrol.uL,pcontrol.uR);
+	motor_driver.driveForward(255, 255);
+
   }
 
   if ( currentTime - adc.lastExecutionTime > LOOP_PERIOD ) {
     adc.lastExecutionTime = currentTime;
 	pressure.updateSample();
 	temperature1.updateSample();
-	temperature2.updateSample();
+	//temperature2.updateSample();
 	button1.updateSample();
   }
 
@@ -182,7 +186,7 @@ void loop() {
   }
 }
 
-/*
+
 void EncoderRiseA(void)
 {
 	encoder.riseA();
@@ -197,4 +201,8 @@ void EncoderRiseB(void)
 {
 	encoder.riseB();
 }
-*/
+
+void EncoderFallB(void)
+{
+	encoder.fallB();
+}

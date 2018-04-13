@@ -1,5 +1,6 @@
 #ifndef _SENSORENCODER_h
 #define _SENSORENCODER_h
+
 #include "DataSource.h"
 
 class SensorEncoder : public DataSource 
@@ -22,10 +23,13 @@ public:
 	int pinNumberA;
 	int pinNumberB;
 
+	uint8_t state;
+
 	//ISR functions
 	void riseA(void);
 	void fallA(void);
 	void riseB(void);
+	void fallB(void);
 
 private:
 	const char* name;

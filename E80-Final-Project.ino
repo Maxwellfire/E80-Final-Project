@@ -138,7 +138,11 @@ void loop() {
 		+ temperature1.printSample() + " "
 		//+ temperature2.printSample() + " "
 		+ button1.printSample() + " "
-		+ encoder.printCount());
+		+ encoder.printCount() + " "
+		+ batteryCurrent.printSample() + " "
+		+ batteryVoltage.printSample()
+	);
+
     printer.printValue(1,logger.printState());
     printer.printValue(2,gps.printState());   
     printer.printValue(3,state_estimator.printState());     

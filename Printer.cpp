@@ -1,5 +1,5 @@
 #include "Printer.h"
-#include <algorithm>
+//#include <algorithm.h>
 
 Printer::Printer(void) {
 }

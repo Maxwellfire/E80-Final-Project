@@ -10,8 +10,8 @@
 
 
 typedef struct {
-  float x = 0; // x position in global frame
-  float y = 0; // y position in global frame
+  double x = 0; // x position in global frame
+  double y = 0; // y position in global frame
   float heading = 0; // heading in global frame
   // float v = 0; // linear velocity in robot frame
   // float w = 0; // rotational velocity in robot frame
@@ -35,7 +35,7 @@ public:
   void updateState(sensors_vec_t * imu_state_p, gps_state_t * gps_state_p);
   String printState(void);
 
-  void latlonToXY(double lat, double lon, float* x_p, float* y_p);
+  //void latlonToXY(double lat, double lon, double* x_p, double* y_p);
 
   // from DataSource
   size_t writeDataBytes(unsigned char * buffer, size_t idx);
@@ -46,7 +46,7 @@ private:
   double loop_period;
   double orig_lat;
   double orig_lon;
-  float cosOrigLat;
+  double cosOrigLat;
 
 
 };

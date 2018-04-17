@@ -10,7 +10,7 @@ inline float angleDiff(float a) {
 }
 
 StateEstimator::StateEstimator(void)
-  : DataSource("x,y,heading","double,double,float") // from DataSource
+  : DataSource("x,y,heading","float,float,float") // from DataSource
 {}
 
 void StateEstimator::init(double lat, double lon) {
@@ -24,8 +24,8 @@ void StateEstimator::init(double lat, double lon) {
 
 void StateEstimator::updateState(sensors_vec_t * imu_state_p, gps_state_t * gps_state_p) {
   // get x and y
-  state.x = (gps_state_p->lon-orig_lon) * (PI/180.0) * RADIUS_OF_EARTH_M * cosOrigLat;
-  state.y = (gps_state_p->lat-orig_lat) * (PI/180.0) * RADIUS_OF_EARTH_M;
+  state.x = (gps_state_p->lon-orig_lon)*PI/180.0*RADIUS_OF_EARTH_M*cosOrigLat;
+  state.y = (gps_state_p->lat-orig_lat)*PI/180.0*RADIUS_OF_EARTH_M;
 
   // get heading
   float heading_rad = imu_state_p->heading*PI/180.0; // convert to radians
@@ -44,12 +44,9 @@ String StateEstimator::printState(void) {
 }
 
 size_t StateEstimator::writeDataBytes(unsigned char * buffer, size_t idx) {
-	double* data_slot_double = (double *) &buffer[idx];
-	data_slot_double[0] = state.x;
-	data_slot_double[1] = state.y;
-	idx += 2 * sizeof(double);
-
-	float* data_slot_float = (float *)&buffer[idx];
-	data_slot_float[0] = state.heading;
-	return idx + 1*sizeof(float);
+  float * data_slot = (float *) &buffer[idx];
+  data_slot[0] = state.x;
+  data_slot[1] = state.y;
+  data_slot[2] = state.heading;
+  return idx + 3*sizeof(float);
 }

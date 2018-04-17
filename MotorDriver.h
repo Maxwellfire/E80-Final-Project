@@ -5,7 +5,7 @@
 
 #define LEFT_MOTOR_INDEX 0
 #define RIGHT_MOTOR_INDEX 1
-#define VERT_MOTOR_INDEX 3  //2 seems dead
+#define VERT_MOTOR_INDEX 3
 #define X_MOTOR_INDEX 2
 
 #define FORWARD_PIN 0

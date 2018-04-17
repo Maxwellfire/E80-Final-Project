@@ -1,7 +1,7 @@
 #ifndef __PINOUTS_H__
 #define __PINOUTS_H__
 
-#define LOOP_LED 5
+#define LOOP_LED 7
 #define USER_SWITCH 2
 
 #define MOTOR_L_FORWARD 3		// M4: pins 3,4

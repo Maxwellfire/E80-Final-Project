@@ -41,7 +41,7 @@ public:
 
 private:
   // Create sensor instances.
-  Adafruit_FXAS21002C gyro = Adafruit_FXAS21002C(0x0021002C);
+  //Adafruit_FXAS21002C gyro = Adafruit_FXAS21002C(0x0021002C);
   Adafruit_FXOS8700 accelmag = Adafruit_FXOS8700(0x8700A, 0x8700B);
 
   // Offsets applied to raw x/y/z mag values
@@ -55,11 +55,11 @@ private:
   float mag_field_strength = 50.23F;
 
   // Offsets applied to compensate for gyro zero-drift error for x/y/z
-  float gyro_zero_offsets[3] = { 0.0F, 0.0F, 0.0F };
+  //float gyro_zero_offsets[3] = { 0.0F, 0.0F, 0.0F };
 
   // Mahony is lighter weight filter for slower systems
   // (Madgwick can be used for fast rotation)
-  Mahony filter;
+  //Mahony filter;
 
 
 };

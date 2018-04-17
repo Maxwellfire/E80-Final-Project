@@ -88,7 +88,7 @@ void Logger::init(void) {
 	keepLogging = true;
 }
 
-bool Logger::log(void){
+void Logger::log(void){
 	// record data from sources
 	size_t idx = 0;
 	unsigned char buffer[BYTES_PER_BLOCK];
@@ -116,8 +116,6 @@ bool Logger::log(void){
 
 	writtenBlocks++;
 	keepLogging = true;
-
-	return true;
 }
 
 String Logger::printState(void){

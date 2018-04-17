@@ -30,7 +30,7 @@ public:
 	void init(void);
 
 	// records all data at the time it's called to the SD
-	bool log(void);
+	void log(void);
 
 	String printState(void);
 	int lastExecutionTime = -1;

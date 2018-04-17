@@ -91,7 +91,7 @@ String SensorEncoder::printCount(void)
 
 size_t SensorEncoder::writeDataBytes(unsigned char * buffer, size_t idx)
 {
-	bool * data_slot = (bool *)&buffer[idx];
+	int * data_slot = (int *)&buffer[idx];
 	data_slot[0] = encoderCount;
-	return idx + 1 * sizeof(bool);
+	return idx + 1 * sizeof(int);
 }

@@ -31,11 +31,6 @@ void MotorDriver::apply(void)
 
   // write this information to motors
   for (int m = 0; m < NUM_MOTORS; m++) { // using pwmDir as 0 or 1
-	analogWrite(motorPins[m][FORWARD_PIN], 0);
-	analogWrite(motorPins[m][BACKWARD_PIN], 0);
-
-	delayMicroseconds(500);
-
     analogWrite(motorPins[m][FORWARD_PIN], pwmDir[m]*pwmValues[m]);
     analogWrite(motorPins[m][BACKWARD_PIN], (!pwmDir[m])*pwmValues[m]);
   }

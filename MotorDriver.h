@@ -12,7 +12,7 @@
 #define BACKWARD_PIN 1
 
 // the minimum PWM amount that causes the motors to actually spin
-#define MOTOR_DEADZONE 5
+#define MOTOR_DEADZONE 20
 
 #include <Arduino.h>
 #include "DataSource.h"

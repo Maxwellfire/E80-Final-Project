@@ -26,10 +26,8 @@ public:
 	uint8_t state;
 
 	//ISR functions
-	void riseA(void);
-	void fallA(void);
-	void riseB(void);
-	void fallB(void);
+	void changeA(void);
+	void changeB(void);
 
 private:
 	const char* name;

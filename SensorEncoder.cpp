@@ -20,66 +20,80 @@ void SensorEncoder::init(void)
 	pinMode(pinNumberB, INPUT);
 }
 
-void SensorEncoder::riseA(void)
+void SensorEncoder::changeA(void)
 {
-	switch (state)
-	{
-	case 0:
-		state = 1;
-		encoderCount++;
-		break;
-	case 3:
-		state = 2;
-		break;
-	default:
-		break;
-	}
-}
 
-void SensorEncoder::fallA(void)
-{
-	switch (state)
+	bool rising = digitalRead(pinNumberA);
+
+	switch (rising)
 	{
 	case 1:
-		state = 0;
-		encoderCount--;
+		switch (state)
+		{
+		case 0:
+			state = 1;
+			encoderCount++;
+			break;
+		case 3:
+			state = 2;
+			break;
+		default:
+			break;
+		}
 		break;
-	case 2:
-		state = 3;
-		break;
-	default:
-		break;
-	}
-}
-
-void SensorEncoder::riseB(void)
-{
-	switch (state)
-	{
 	case 0:
-		state = 3;
-		break;
-	case 1:
-		state = 2;
-		break;
-	default:
+		switch (state)
+		{
+		case 1:
+			state = 0;
+			encoderCount--;
+			break;
+		case 2:
+			state = 3;
+			break;
+		default:
+			break;
+		}
 		break;
 	}
+
 }
 
-void SensorEncoder::fallB(void)
+void SensorEncoder::changeB(void)
 {
-	switch (state)
+	bool rising = digitalRead(pinNumberB);
+
+	switch (rising)
 	{
-	case 2:
-		state = 1;
+	case 1:
+		switch (state)
+		{
+		case 0:
+			state = 3;
+			break;
+		case 1:
+			state = 2;
+			break;
+		default:
+			break;
+		}
 		break;
-	case 3:
-		state = 0;
-		break;
-	default:
+	case 0:
+		switch (state)
+		{
+		case 2:
+			state = 1;
+			break;
+		case 3:
+			state = 0;
+			break;
+		default:
+			break;
+		}
 		break;
 	}
+
+	
 }
 
 String SensorEncoder::printCount(void)

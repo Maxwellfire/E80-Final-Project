@@ -16,7 +16,8 @@ StateEstimator::StateEstimator(void)
 void StateEstimator::init(double lat, double lon) {
   orig_lat = lat;
   orig_lon = lon;
- 	state.x = 0;
+ 
+  state.x = 0;
   state.y = 0;
   state.heading = 0;
   cosOrigLat = cos(orig_lat*PI/180.0);
@@ -24,8 +25,8 @@ void StateEstimator::init(double lat, double lon) {
 
 void StateEstimator::updateState(sensors_vec_t * imu_state_p, gps_state_t * gps_state_p) {
   // get x and y
-  state.x = (gps_state_p->lon-orig_lon)*PI/180.0*RADIUS_OF_EARTH_M*cosOrigLat;
-  state.y = (gps_state_p->lat-orig_lat)*PI/180.0*RADIUS_OF_EARTH_M;
+  state.x = (gps_state_p->lon - orig_lon)*PI/180.0*RADIUS_OF_EARTH_M*cosOrigLat;
+  state.y = (gps_state_p->lat - orig_lat)*PI/180.0*RADIUS_OF_EARTH_M;
 
   // get heading
   float heading_rad = imu_state_p->heading*PI/180.0; // convert to radians

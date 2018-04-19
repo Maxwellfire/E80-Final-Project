@@ -3,7 +3,7 @@
 
 #include "StateEstimator.h"
 
-#define SUCCESS_RADIUS 2.0 // success radius in meters
+#define SUCCESS_RADIUS 5.0 // success radius in meters
 
 class PControl {
 public:
@@ -25,10 +25,10 @@ public:
   float yaw;
   float dist;            // distance to waypoint
   float u;               // control effort
-  float Kp=10.0;         // proportional control gain
+  float Kp=35;         // proportional control gain
   float Kr=1.0;          // right motor gain correction
   float Kl=1.0;          // left motor gain correction
-  float avgPower = 5.0;  // average forward thrust
+  float avgPower = 140;  // average forward thrust
   double uR;             // right motor effort
   double uL;             // left motor effort
 

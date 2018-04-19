@@ -39,21 +39,28 @@ void SensorIMU::read(void) {
 
   accelmag.getEvent(&accel_event, &mag_event);
 
-  // Apply mag offset compensation (base values in uTesla)
-  float x = mag_event.magnetic.x - mag_offsets[0];
-  float y = mag_event.magnetic.y - mag_offsets[1];
-  float z = mag_event.magnetic.z - mag_offsets[2];
+  //// Apply mag offset compensation (base values in uTesla)
+  //float x = mag_event.magnetic.x - mag_offsets[0];
+  //float y = mag_event.magnetic.y - mag_offsets[1];
+  //float z = mag_event.magnetic.z - mag_offsets[2];
 
-  // Apply mag soft iron error compensation
-  float mx = x * mag_ironcomp[0][0] + y * mag_ironcomp[0][1] + z * mag_ironcomp[0][2];
-  float my = x * mag_ironcomp[1][0] + y * mag_ironcomp[1][1] + z * mag_ironcomp[1][2];
-  float mz = x * mag_ironcomp[2][0] + y * mag_ironcomp[2][1] + z * mag_ironcomp[2][2];
+  //// Apply mag soft iron error compensation
+  //float mx = x * mag_ironcomp[0][0] + y * mag_ironcomp[0][1] + z * mag_ironcomp[0][2];
+  //float my = x * mag_ironcomp[1][0] + y * mag_ironcomp[1][1] + z * mag_ironcomp[1][2];
+  //float mz = x * mag_ironcomp[2][0] + y * mag_ironcomp[2][1] + z * mag_ironcomp[2][2];
+
+  // Don't do soft iron error;
+  float mx = mag_event.magnetic.x + mag_offsets[0];
+  float my = mag_event.magnetic.y + mag_offsets[1];
+  float mz = mag_event.magnetic.z + mag_offsets[2];
+
 
   float ax = accel_event.acceleration.x;
   float ay = accel_event.acceleration.y;
   float az = accel_event.acceleration.z;
 
   getOrientation(ax,ay,az,mx,my,mz);  // populate the this->simple field with simple orientation calcs
+
   state.roll = simple.roll; 
   state.pitch = simple.pitch; 
   state.heading = - simple.heading * 57.2958F; // Report in degrees for state estimator

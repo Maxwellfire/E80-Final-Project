@@ -13,6 +13,9 @@ Previous Contributors:  Josephine Wong (jowong@hmc.edu) '18 (contributed in 2016
 #include <Wire.h>
 #include <Adafruit_GPS.h>
 
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
 #include "TimingOffsets.h"
 #include "Pinouts.h"
 #include "SensorGPS.h"
@@ -56,7 +59,11 @@ Printer printer;
 LED led;
 
 //define waypoints in the global scope as the PControl class doesn't make a deep copy.
-double waypoints[] = { 0, 10, 0, 0 };   // listed as x0,y0,x1,y1, ... etc.
+double waypoints[] = { 113, -45, 128, -45, 128, -38, 113, -38, 113, -45};   // listed as x0,y0,x1,y1, ... etc.
+
+const int number_of_waypoints = 5;
+const int waypoint_dimensions = 2;       // waypoints have two pieces of information, x then y.
+
 
 // loop start recorder
 int loopStartTime;
@@ -100,21 +107,19 @@ void setup() {
   batteryCurrent.init();
 
 
-  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderRiseA, RISING);
-  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderFallA, FALLING);
-  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberB), &EncoderRiseB, RISING);
-  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberB), &EncoderFallB, FALLING);
+  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderChangeA, CHANGE);
+  //attachInterrupt(digitalPinToInterrupt(encoder.pinNumberA), &EncoderFallA, FALLING);
+  attachInterrupt(digitalPinToInterrupt(encoder.pinNumberB), &EncoderChangeB, CHANGE);
+  //attachInterrupt(digitalPinToInterrupt(encoder.pinNumberB), &EncoderFallB, FALLING);
 
 
   button1.init();
-
-  const int number_of_waypoints = 2;
-  const int waypoint_dimensions = 2;       // waypoints have two pieces of information, x then y.
 
   pcontrol.init(number_of_waypoints, waypoint_dimensions, waypoints);
   
   const float origin_lat = 34.106465;
   const float origin_lon = -117.712488;
+
   state_estimator.init(origin_lat, origin_lon);
 
   printer.printMessage("Starting main loop", 10);
@@ -152,14 +157,20 @@ void loop() {
     printer.printValue(7,imu.printRollPitchHeading());        
     printer.printValue(8,imu.printAccels());
     printer.printToSerial();  // To stop printing, just comment this line out
+
+	printer.printMessage(digitalReadFast(26), 1);
+	printer.printMessage(digitalReadFast(27), 1);
+
   }
 
-  if ( currentTime - pcontrol.lastExecutionTime > LOOP_PERIOD ) {
+  if ( currentTime - pcontrol.lastExecutionTime > 20 ) {
     pcontrol.lastExecutionTime = currentTime;
     pcontrol.calculateControl(&state_estimator.state);
     
-	//motor_driver.driveForward(pcontrol.uL,pcontrol.uR);
-	motor_driver.driveForward(255, 255);
+	//motor_driver.drive(0, 255, 255, 0);
+	motor_driver.drive(0, pcontrol.uR, pcontrol.uL, 0);
+	//motor_driver.driveForward(255, 255);
+	//motor_driver.drive(imu.state.pitch * 4000.0, imu.state.pitch * 4000.0, imu.state.pitch * 4000.0, imu.state.pitch * 4000.0);
 
   }
 
@@ -175,7 +186,7 @@ void loop() {
 
   }
 
-  if ( currentTime - imu.lastExecutionTime > LOOP_PERIOD ) {
+  if ( currentTime - imu.lastExecutionTime > 20 ) {
     imu.lastExecutionTime = currentTime;
     imu.read();     // blocking I2C calls
   }
@@ -203,22 +214,13 @@ void loop() {
 }
 
 
-void EncoderRiseA(void)
+void EncoderChangeA(void)
 {
-	encoder.riseA();
+	//printer.printMessage("foo", 2);
+	encoder.changeA();
 }
 
-void EncoderFallA(void)
+void EncoderChangeB(void)
 {
-	encoder.fallA();
-}
-
-void EncoderRiseB(void)
-{
-	encoder.riseB();
-}
-
-void EncoderFallB(void)
-{
-	encoder.fallB();
+	encoder.changeB();
 }

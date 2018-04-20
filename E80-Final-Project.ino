@@ -59,7 +59,7 @@ Printer printer;
 LED led;
 
 //define waypoints in the global scope as the PControl class doesn't make a deep copy.
-double waypoints[] = { 113, -45, 128, -45, 128, -38, 113, -38, 113, -45};   // listed as x0,y0,x1,y1, ... etc.
+double waypoints[] = {40, 80, 60, 80, 40, 60, 60, 60, 40, 80};   // listed as x0,y0,x1,y1, ... etc.
 
 const int number_of_waypoints = 5;
 const int waypoint_dimensions = 2;       // waypoints have two pieces of information, x then y.
@@ -69,6 +69,9 @@ const int waypoint_dimensions = 2;       // waypoints have two pieces of informa
 int loopStartTime;
 int currentTime;
 int current_way_point = 0;
+
+
+bool waiting = 1; 
 
 ////////////////////////* Setup *////////////////////////////////
 
@@ -112,13 +115,15 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(encoder.pinNumberB), &EncoderChangeB, CHANGE);
   //attachInterrupt(digitalPinToInterrupt(encoder.pinNumberB), &EncoderFallB, FALLING);
 
-
   button1.init();
 
   pcontrol.init(number_of_waypoints, waypoint_dimensions, waypoints);
   
-  const float origin_lat = 34.106465;
-  const float origin_lon = -117.712488;
+  //const float origin_lat = 34.106465;
+  //const float origin_lon = -117.712488;
+  
+  const float origin_lat = 34.105240;
+  const float origin_lon = -117.705553;
 
   state_estimator.init(origin_lat, origin_lon);
 
@@ -136,7 +141,7 @@ void setup() {
 
 void loop() {
   currentTime=millis();
-  
+
   if ( currentTime - printer.lastExecutionTime > LOOP_PERIOD ) {
     printer.lastExecutionTime = currentTime;
 	printer.printValue(0, pressure.printSample() + " "
@@ -163,7 +168,7 @@ void loop() {
 
   }
 
-  if ( currentTime - pcontrol.lastExecutionTime > 20 ) {
+  if ( currentTime - pcontrol.lastExecutionTime > 20 && !waiting) {
     pcontrol.lastExecutionTime = currentTime;
     pcontrol.calculateControl(&state_estimator.state);
     
@@ -180,6 +185,7 @@ void loop() {
 	temperature1.updateSample();
 	//temperature2.updateSample();
 	button1.updateSample();
+	waiting = !button1.sample && waiting;
 
 	batteryVoltage.updateSample();
 	batteryCurrent.updateSample();

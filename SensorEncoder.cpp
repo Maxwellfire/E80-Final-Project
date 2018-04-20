@@ -32,7 +32,7 @@ void SensorEncoder::changeA(void)
 		{
 		case 0:
 			state = 1;
-			encoderCount++;
+			encoderCount--;
 			break;
 		case 3:
 			state = 2;
@@ -46,7 +46,7 @@ void SensorEncoder::changeA(void)
 		{
 		case 1:
 			state = 0;
-			encoderCount--;
+			encoderCount++;
 			break;
 		case 2:
 			state = 3;

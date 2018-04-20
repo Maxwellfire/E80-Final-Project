@@ -25,10 +25,10 @@ public:
   float yaw;
   float dist;            // distance to waypoint
   float u;               // control effort
-  float Kp=35;         // proportional control gain
+  float Kp=150;         // proportional control gain
   float Kr=1.0;          // right motor gain correction
   float Kl=1.0;          // left motor gain correction
-  float avgPower = 140;  // average forward thrust
+  float avgPower = 230;  // average forward thrust
   double uR;             // right motor effort
   double uL;             // left motor effort
 

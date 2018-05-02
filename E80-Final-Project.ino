@@ -59,9 +59,9 @@ Printer printer;
 LED led;
 
 //define waypoints in the global scope as the PControl class doesn't make a deep copy.
-double waypoints[] = {40, 80, 60, 80, 40, 60, 60, 60, 40, 80};   // listed as x0,y0,x1,y1, ... etc.
+double waypoints[] = {25, 80, 20.5, 65, 30.5, 62, 35, 77, 45, 74, 40.5, 59, 50.5, 56, 55, 71, 25, 80};   // listed as x0,y0,x1,y1, ... etc.
 
-const int number_of_waypoints = 5;
+const int number_of_waypoints = 9;
 const int waypoint_dimensions = 2;       // waypoints have two pieces of information, x then y.
 
 
@@ -81,6 +81,7 @@ void setup() {
   logger.include(&gps);
   logger.include(&state_estimator);
   logger.include(&motor_driver);
+  logger.include(&pcontrol);
   logger.include(&pressure);
   logger.include(&temperature1);
   //logger.include(&temperature2);
@@ -88,7 +89,7 @@ void setup() {
   logger.include(&encoder);
   logger.include(&batteryVoltage);
   logger.include(&batteryCurrent);
-  //logger.include(&adc);
+  //logger.include(&adc);p
 
   logger.init();
 
@@ -122,8 +123,8 @@ void setup() {
   //const float origin_lat = 34.106465;
   //const float origin_lon = -117.712488;
   
-  const float origin_lat = 34.105240;
-  const float origin_lon = -117.705553;
+  const float origin_lat = 33.461887;
+  const float origin_lon = -117.706134;
 
   state_estimator.init(origin_lat, origin_lon);
 
@@ -162,10 +163,6 @@ void loop() {
     printer.printValue(7,imu.printRollPitchHeading());        
     printer.printValue(8,imu.printAccels());
     printer.printToSerial();  // To stop printing, just comment this line out
-
-	printer.printMessage(digitalReadFast(26), 1);
-	printer.printMessage(digitalReadFast(27), 1);
-
   }
 
   if ( currentTime - pcontrol.lastExecutionTime > 20 && !waiting) {
@@ -173,7 +170,7 @@ void loop() {
     pcontrol.calculateControl(&state_estimator.state);
     
 	//motor_driver.drive(0, 255, 255, 0);
-	motor_driver.drive(0, pcontrol.uR, pcontrol.uL, 0);
+	motor_driver.drive(pcontrol.uL, pcontrol.uR, 0, 0);
 	//motor_driver.driveForward(255, 255);
 	//motor_driver.drive(imu.state.pitch * 4000.0, imu.state.pitch * 4000.0, imu.state.pitch * 4000.0, imu.state.pitch * 4000.0);
 

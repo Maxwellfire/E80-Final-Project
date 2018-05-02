@@ -9,7 +9,8 @@ inline float angleDiff(float a) {
   return a;
 }
 
-PControl::PControl(void) {
+PControl::PControl(void) 
+	: DataSource("CurrentWaypointNum", "int") {
 }
 
 void PControl::init(const int totalWayPoints_in, const int stateDims_in, double * wayPoints_in) {
@@ -73,4 +74,12 @@ void PControl::updatePoint(float x, float y) {
     }
     printer.printMessage(changingWPMessage,cwpmTime);
   }
+}
+
+size_t PControl::writeDataBytes(unsigned char * buffer, size_t idx)
+{
+	int* int_slot = (int*)(buffer + idx);
+	int_slot[0] = currentWayPoint;
+	idx += sizeof(int);
+	return idx;
 }

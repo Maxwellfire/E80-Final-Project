@@ -2,10 +2,12 @@
 #define __PCONTROL_H__
 
 #include "StateEstimator.h"
+#include "DataSource.h"
 
-#define SUCCESS_RADIUS 5.0 // success radius in meters
+#define SUCCESS_RADIUS 2.0 // success radius in meters
 
-class PControl {
+class PControl : public DataSource 
+{
 public:
   PControl(void);
 
@@ -32,6 +34,8 @@ public:
   double uR;             // right motor effort
   double uL;             // left motor effort
 
+// from DataSource
+  size_t writeDataBytes(unsigned char * buffer, size_t idx);
 
 private:
 
